@@ -14,24 +14,25 @@ public:
     MyApp() {}
 
     void load() override {
+        pos = notex::Vec2D(10, 10);
     }
 
     void update() override {
         if (isKeyDown(notex::Key::Right)) {
-            x++;
+            pos.x += 1.0f;
         }
         if (isKeyDown(notex::Key::Left)) {
-            x--;
+            pos.x -= 1.0f;
         }
         if (isKeyDown(notex::Key::Down)) {
-            y++;
+            pos.y += 1.0f;
         }
         if (isKeyDown(notex::Key::Up)) {
-            y--;
+            pos.y -= 1.0f;
         }
 
         col_mul += col_mul_d;
-        if (col_mul <= 0.0 || col_mul >= 33.0) {
+        if (col_mul <= 0.0 || col_mul >= 1.1) {
             col_mul_d = -col_mul_d;
         }
     }
@@ -39,10 +40,10 @@ public:
     void draw() override {
 
         std::vector<notex::Vertex> verts{
-            notex::Vertex(10, 10, 1, 1, 1),
-            notex::Vertex(630, 10, 1, 0, 0),
-            notex::Vertex(630, 350, 0, 0, 1),
-            notex::Vertex(10, 350, 0, 1, 0),
+            notex::Vertex(0, 0, 1, 1, 1),
+            notex::Vertex(50, 0, 1, 0, 0),
+            notex::Vertex(50, 50, 0, 0, 1),
+            notex::Vertex(0, 50, 0, 1, 0),
         };
 
         std::vector<uint32_t> inds{
@@ -51,13 +52,18 @@ public:
         };
 
         setMode(notex::DrawingMode::Tris);
-        addVertices(verts, inds);
+        for (notex::Vertex vert : verts) {
+            addVertexRaw(notex::Vertex(vert.pos + pos, vert.color * col_mul));
+        }
+        addIndices(inds);
+        //addVertices(verts, inds);
     }
 private:
+    notex::Vec2D pos;
     int x = 300;
     int y = 100;
-    float col_mul = 31.0;
-    float col_mul_d = -0.2;
+    float col_mul = 1.0;
+    float col_mul_d = -0.01;
 };
 
 

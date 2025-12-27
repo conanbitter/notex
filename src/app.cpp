@@ -172,13 +172,25 @@ void App::addVertex(const Vertex& vertex) {
     m_index_offset++;
 }
 
+void App::addVertexRaw(const Vertex& vertex) {
+    m_vertices.push_back(vertex);
+}
+
 void App::addVertices(const std::vector<Vertex>& vertices) {
     for (auto vertex : vertices) {
         addVertex(vertex);
     }
 }
+
 void App::addVertices(const std::vector<Vertex>& vertices, std::vector<uint32_t>& indices) {
     m_vertices.insert(m_vertices.end(), vertices.begin(), vertices.end());
+    for (uint32_t index : indices) {
+        m_indices.push_back(index + m_index_offset);
+    }
+    m_index_offset += m_indices.size();
+}
+
+void App::addIndices(std::vector<uint32_t>& indices) {
     for (uint32_t index : indices) {
         m_indices.push_back(index + m_index_offset);
     }

@@ -29,8 +29,10 @@ namespace notex {
 
         void setMode(DrawingMode mode);
         void addVertex(const Vertex& vertex);
+        void addVertexRaw(const Vertex& vertex);
         void addVertices(const std::vector<Vertex>& vertices);
         void addVertices(const std::vector<Vertex>& vertices, std::vector<uint32_t>& indices);
+        void addIndices(std::vector<uint32_t>& indices);
 
         bool isKeyDown(Key key) const { return m_keys_down.contains(key); }
         bool isKeyPressed(Key key) const { return m_keys_pressed.contains(key); }

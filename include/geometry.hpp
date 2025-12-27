@@ -12,6 +12,10 @@ namespace notex {
 
         Vec2D(float x, float y) :x{ x }, y{ y } {}
         Vec2D() :x{ 0.0f }, y{ 0.0f } {}
+
+        Vec2D operator+(const Vec2D& rhs);
+        Vec2D& operator+=(const Vec2D& rhs);
+        friend Vec2D operator*(const Vec2D& vec, float val);
     };
 #pragma pack(pop)
 
