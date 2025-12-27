@@ -14,7 +14,7 @@ public:
     MyApp() {}
 
     void load() override {
-        pos = notex::Vec2D(10, 10);
+        pos = notex::Vec2D(35, 35);
     }
 
     void update() override {
@@ -35,6 +35,13 @@ public:
         if (col_mul <= 0.0 || col_mul >= 1.1) {
             col_mul_d = -col_mul_d;
         }
+
+        s += ds;
+        if (s <= 1.0 || s >= 2.0) {
+            ds = -ds;
+        }
+
+        a += 0.01;
     }
 
     void draw() override {
@@ -51,9 +58,11 @@ public:
             3,1,2
         };
 
+        notex::Vec2D origin(25, 25);
+
         setMode(notex::DrawingMode::Tris);
         for (notex::Vertex vert : verts) {
-            addVertexRaw(notex::Vertex(vert.pos + pos, vert.color * col_mul));
+            addVertexRaw(notex::Vertex((vert.pos - origin).rotate(a) * s + pos, vert.color * col_mul));
         }
         addIndices(inds);
         //addVertices(verts, inds);
@@ -63,7 +72,10 @@ private:
     int x = 300;
     int y = 100;
     float col_mul = 1.0;
-    float col_mul_d = -0.01;
+    float col_mul_d = -0.005;
+    float a = 0.0;
+    float s = 1.0;
+    float ds = 0.01;
 };
 
 
