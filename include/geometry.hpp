@@ -67,6 +67,17 @@ namespace notex {
         std::optional<Vec2D> scale;
         std::optional<Vec2D> pos;
 
+        void setOrigin(const Vec2D& new_origin) { origin = new_origin; }
+        Vec2D getOrigin() { return origin.value_or(Vec2D(0.0f, 0.0f)); }
+        void setAngle(float new_angle) { angle = new_angle; }
+        float getAngle() { return angle.value_or(0.0f); }
+        void setScale(const Vec2D& new_scale) { scale = new_scale; }
+        void setScale(float new_scale) { scale = Vec2D(new_scale, new_scale); }
+        Vec2D getScale() { return scale.value_or(Vec2D(1.0f, 1.0f)); }
+        void setPos(const Vec2D& new_pos) { pos = new_pos; }
+        Vec2D getPos() { return pos.value_or(Vec2D(0.0f, 0.0f)); }
+
+
         Vec2D apply(const Vec2D& src);
         void rotate(float rot_angle);
         void enlarge(float mul_scale);
