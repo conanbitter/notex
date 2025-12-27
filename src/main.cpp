@@ -38,9 +38,12 @@ public:
 
     void draw() override {
         setMode(notex::DrawingMode::Tris);
-        addVertex(notex::Vertex(-1, -1, 1, 1, 1));
-        addVertex(notex::Vertex(-1, 1, 1, 0, 1));
-        addVertex(notex::Vertex(1, 1, 1, 1, 0));
+        //addVertex(notex::Vertex(100, 100, 1, 1, 1));
+        //addVertex(notex::Vertex(200, 100, 1, 0, 1));
+        //addVertex(notex::Vertex(100, 200, 1, 1, 0));
+        addVertex(notex::Vertex(0, 0, 1, 1, 1));
+        addVertex(notex::Vertex(640, 0, 1, 0, 1));
+        addVertex(notex::Vertex(0, 360, 1, 1, 0));
     }
 private:
     int x = 300;
@@ -57,7 +60,7 @@ int main(void) {
 #endif
     try {
         MyApp app;
-        app.init("Pixel Anvil", 640, 360, 1, true);
+        app.init("Pixel Anvil", 640, 360, 1);
         app.run();
     }
     catch (const std::exception& e) {

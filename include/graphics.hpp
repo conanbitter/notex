@@ -6,8 +6,8 @@
 namespace notex {
     class GraphicsContext {
     public:
-        void init(int width, int height);
-        void resize(int width, int height);
+        void init();
+        void resize(int width, int height, Vec2D scale, Vec2D offset);
         void free();
         void draw(GLenum mode, Vertex* data, size_t count);
     private:

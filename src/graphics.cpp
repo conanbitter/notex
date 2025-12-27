@@ -16,7 +16,7 @@ static const char* vertex_shader_code = R"(
     out vec4 fragColor;
 
     void main() {
-        gl_Position = vec4(vert.x, vert.y, 0.0, 1.0);//vert.x*scale.x+scale.z, vert.y*scale.y+scale.w
+        gl_Position = vec4(vert.x*scale.x-1.0+scale.z, 1.0-vert.y*scale.y-scale.w, 0.0, 1.0);
         fragColor = vertColor;
     }
 )";
@@ -127,13 +127,13 @@ static GLuint initShaders(GLint& vertex_pos, GLint& vertex_color, GLint& scale) 
     return program;
 }
 
-static void scaleShaders(GLint param, const Rect& scale_data) {
-    glUniform4f(param, scale_data.width, scale_data.height, scale_data.x, scale_data.y);
+static void scaleShaders(GLint param, Vec2D scale, Vec2D offset) {
+    glUniform4f(param, scale.x, scale.y, offset.x, offset.y);
 }
 
 #pragma endregion Shaders
 
-void GraphicsContext::init(int width, int height) {
+void GraphicsContext::init() {
     GLint vert_loc, vert_color_loc;
     m_program = initShaders(vert_loc, vert_color_loc, m_scale_uniform);
 
@@ -156,9 +156,9 @@ void GraphicsContext::init(int width, int height) {
     glClearColor(0.09, 0.14, 0.16, 1.0);
 }
 
-void GraphicsContext::resize(int width, int height) {
+void GraphicsContext::resize(int width, int height, Vec2D scale, Vec2D offset) {
     glViewport(0, 0, width, height);
-    //scaleShaders(m_scale_uniform, scale_data);
+    scaleShaders(m_scale_uniform, scale, offset);
 }
 
 void GraphicsContext::free() {

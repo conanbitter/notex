@@ -19,7 +19,7 @@ namespace notex {
     public:
         App() : m_init_complete{ false }, m_running{ false }, m_window{ nullptr } {};
         ~App();
-        void init(const std::string& title, int width, int height, int initial_scale = 1, bool use_integer_scaling = true);
+        void init(const std::string& title, int width, int height, int initial_scale = 1);
         void run();
 
         void requestExit();
@@ -47,6 +47,7 @@ namespace notex {
 
         GLFWwindow* m_window;
         GraphicsContext m_context;
+        Size m_view_size;
 
         DrawingMode m_mode;
         std::vector<Vertex> m_vertices;

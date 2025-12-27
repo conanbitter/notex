@@ -64,15 +64,16 @@ static GLFWwindow* initWindow(const std::string& title, int width, int height, i
     return window;
 }
 
-void App::init(const std::string& title, int width, int height, int initial_scale, bool use_integer_scaling) {
+void App::init(const std::string& title, int width, int height, int initial_scale) {
     if (m_init_complete) return;
     m_window = initWindow(title, width, height, initial_scale);
     glfwSetWindowUserPointer(m_window, this);
     glfwSetWindowSizeCallback(m_window, resizeCallback);
     glfwSetKeyCallback(m_window, keyCallback);
 
-    m_context.init(width, height);
+    m_context.init();
     m_mode = DrawingMode::Tris;
+    m_view_size = Size(width, height);
 
     resize(width * initial_scale, height * initial_scale);
 
@@ -81,7 +82,16 @@ void App::init(const std::string& title, int width, int height, int initial_scal
 }
 
 void App::resize(int new_width, int new_height) {
-    m_context.resize(new_width, new_height);
+    float scale = std::min(
+        (float)new_width / m_view_size.width,
+        (float)new_height / m_view_size.height);
+    Vec2D scale_data(
+        2.0f / new_width * scale,
+        2.0f / new_height * scale);
+    Vec2D offset_data(
+        1.0f - m_view_size.width * scale / new_width,
+        1.0f - m_view_size.height * scale / new_height);
+    m_context.resize(new_width, new_height, scale_data, offset_data);
 }
 
 void App::run() {
