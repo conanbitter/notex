@@ -100,8 +100,6 @@ void App::run() {
     m_running = true;
 
     while (!glfwWindowShouldClose(m_window) && m_running) {
-        clearBuffers();
-
         update();
         keyClear();
 
@@ -153,6 +151,7 @@ void App::keyClear() {
 void App::flush()
 {
     m_context.draw((GLenum)m_mode, m_vertices, m_indices);
+    clearBuffers();
 }
 
 void App::clearBuffers() {
