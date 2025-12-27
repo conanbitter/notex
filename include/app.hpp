@@ -9,6 +9,12 @@
 #include "keys.hpp"
 
 namespace notex {
+    enum class DrawingMode :GLenum {
+        Tris = GL_TRIANGLES,
+        Lines = GL_LINES,
+        Points = GL_POINTS
+    };
+
     class App {
     public:
         App() : m_init_complete{ false }, m_running{ false }, m_window{ nullptr } {};
@@ -20,6 +26,9 @@ namespace notex {
 
         void setCursorVisible(bool visible);
         bool getCursorVisible() const { return m_cursor_visible; };
+
+        void setMode(DrawingMode mode);
+        void addVertex(const Vertex& vertex);
 
         bool isKeyDown(Key key) const { return m_keys_down.contains(key); }
         bool isKeyPressed(Key key) const { return m_keys_pressed.contains(key); }
@@ -39,10 +48,14 @@ namespace notex {
         GLFWwindow* m_window;
         GraphicsContext m_context;
 
+        DrawingMode m_mode;
+        std::vector<Vertex> m_vertices;
+
         std::unordered_set<Key> m_keys_down;
         std::unordered_set<Key> m_keys_pressed;
         std::unordered_set<Key> m_keys_released;
 
+        void flush();
         void resize(int new_width, int new_height);
         void keyAction(Key key, bool down);
         void keyClear();

@@ -1,22 +1,23 @@
 #pragma once
 
 #include <stdint.h>
+#include "color.hpp"
 
 namespace notex {
 
-    struct Vec2D
-    {
+#pragma pack(push, 1)
+    struct Vec2D {
         float x;
         float y;
 
         Vec2D(float x, float y) :x{ x }, y{ y } {}
         Vec2D() :x{ 0.0f }, y{ 0.0f } {}
     };
+#pragma pack(pop)
 
     typedef Vec2D Point;
 
-    struct Size
-    {
+    struct Size {
         float width;
         float height;
 
@@ -24,8 +25,7 @@ namespace notex {
         Size() :width{ 0.0f }, height{ 0.0f } {}
     };
 
-    struct Rect
-    {
+    struct Rect {
         float x;
         float y;
         float width;
@@ -40,4 +40,16 @@ namespace notex {
 
         bool contains(const Point& point);
     };
+
+#pragma pack(push, 1)
+    struct Vertex {
+        Vec2D pos;
+        Color color;
+
+        Vertex() :pos(), color() {}
+        Vertex(const Vec2D& pos, const Color& color) :pos(pos), color(color) {}
+        Vertex(float x, float y, float r, float g, float b, float a = 1.0f) :pos(x, y), color(r, g, b, a) {}
+    };
+#pragma pack(pop)
+
 }

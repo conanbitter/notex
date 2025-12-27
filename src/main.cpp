@@ -6,6 +6,7 @@
 #include "messages.hpp"
 #include "color.hpp"
 #include "keys.hpp"
+#include "geometry.hpp"
 
 class MyApp :public notex::App
 {
@@ -36,6 +37,10 @@ public:
     }
 
     void draw() override {
+        setMode(notex::DrawingMode::Tris);
+        addVertex(notex::Vertex(-1, -1, 1, 1, 1));
+        addVertex(notex::Vertex(-1, 1, 1, 0, 1));
+        addVertex(notex::Vertex(1, 1, 1, 1, 0));
     }
 private:
     int x = 300;

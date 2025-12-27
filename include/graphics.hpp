@@ -9,7 +9,7 @@ namespace notex {
         void init(int width, int height);
         void resize(int width, int height);
         void free();
-        void present();
+        void draw(GLenum mode, Vertex* data, size_t count);
     private:
         GLuint m_program;
         GLuint m_vao;

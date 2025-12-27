@@ -72,6 +72,7 @@ void App::init(const std::string& title, int width, int height, int initial_scal
     glfwSetKeyCallback(m_window, keyCallback);
 
     m_context.init(width, height);
+    m_mode = DrawingMode::Tris;
 
     resize(width * initial_scale, height * initial_scale);
 
@@ -88,12 +89,14 @@ void App::run() {
     m_running = true;
 
     while (!glfwWindowShouldClose(m_window) && m_running) {
+        m_vertices.clear();
+
         update();
         keyClear();
 
-        draw();
-
         glClear(GL_COLOR_BUFFER_BIT);
+        draw();
+        flush();
 
         glfwSwapBuffers(m_window); msg::checkGLFWError();
         glfwPollEvents(); msg::checkGLFWError();
@@ -134,4 +137,18 @@ void App::keyAction(Key key, bool down) {
 void App::keyClear() {
     m_keys_pressed.clear();
     m_keys_released.clear();
+}
+
+void notex::App::flush()
+{
+    m_context.draw((GLenum)m_mode, m_vertices.data(), m_vertices.size());
+}
+
+void notex::App::setMode(DrawingMode mode) {
+    if (mode != m_mode) flush();
+    m_mode = mode;
+}
+
+void notex::App::addVertex(const Vertex& vertex) {
+    m_vertices.push_back(vertex);
 }

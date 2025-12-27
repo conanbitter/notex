@@ -11,13 +11,13 @@ static const char* vertex_shader_code = R"(
     uniform vec4 scale;
 
     in vec2 vert;
-    in vec2 vertUV;
+    in vec4 vertColor;
 
-    out vec2 fragUV;
+    out vec4 fragColor;
 
     void main() {
-        gl_Position = vec4(vert.x*scale.x+scale.z, vert.y*scale.y+scale.w, 0.0, 1.0);
-        fragUV = vertUV;
+        gl_Position = vec4(vert.x, vert.y, 0.0, 1.0);//vert.x*scale.x+scale.z, vert.y*scale.y+scale.w
+        fragColor = vertColor;
     }
 )";
 
@@ -25,12 +25,12 @@ static const char* fragment_shader_code = R"(
     #version 150
     uniform sampler2D tex;
 
-    in vec2 fragUV;
+    in vec4 fragColor;
 
     out vec4 outputColor;
 
     void main() {
-        outputColor = vec4(texture(tex, fragUV).rgb, 1.0);
+        outputColor = fragColor;
     }
 )";
 
@@ -119,11 +119,10 @@ static GLuint compileShaderProgram(const char* vertex_shader, const char* fragme
     return program;
 };
 
-static GLuint initShaders(GLint& vertex_pos, GLint& vertex_uv, GLint& texture, GLint& scale) {
+static GLuint initShaders(GLint& vertex_pos, GLint& vertex_color, GLint& scale) {
     GLuint program = compileShaderProgram(vertex_shader_code, fragment_shader_code);
     vertex_pos = glGetAttribLocation(program, "vert");
-    vertex_uv = glGetAttribLocation(program, "vertUV");
-    texture = glGetUniformLocation(program, "tex");
+    vertex_color = glGetAttribLocation(program, "vertColor");
     scale = glGetUniformLocation(program, "scale");
     return program;
 }
@@ -134,18 +133,9 @@ static void scaleShaders(GLint param, const Rect& scale_data) {
 
 #pragma endregion Shaders
 
-static const float quad[6][4] = {
-    {-1.0f, -1.0f, 0.0f, 1.0f},
-    {-1.0f, 1.0f, 0.0f, 0.0f},
-    {1.0f, 1.0f, 1.0f, 0.0f},
-    {-1.0f, -1.0f, 0.0f, 1.0f},
-    {1.0f, 1.0f, 1.0f, 0.0f},
-    {1.0f, -1.0f, 1.0f, 1.0f},
-};
-
 void GraphicsContext::init(int width, int height) {
-    GLint vert_loc, vertUV_loc, tex_loc;
-    m_program = initShaders(vert_loc, vertUV_loc, tex_loc, m_scale_uniform);
+    GLint vert_loc, vert_color_loc;
+    m_program = initShaders(vert_loc, vert_color_loc, m_scale_uniform);
 
     glDisable(GL_BLEND);
     glDisable(GL_DEPTH_TEST);
@@ -156,10 +146,9 @@ void GraphicsContext::init(int width, int height) {
     glGenBuffers(1, &m_vbo);
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
     glEnableVertexAttribArray(vert_loc);
-    glVertexAttribPointer(vert_loc, 2, GL_FLOAT, false, 4 * 4, nullptr);
-    glEnableVertexAttribArray(vertUV_loc);
-    glVertexAttribPointer(vertUV_loc, 2, GL_FLOAT, false, 4 * 4, (const void*)(2 * 4));
-    glBufferData(GL_ARRAY_BUFFER, 6 * 4 * 4, &quad, GL_STATIC_DRAW);
+    glVertexAttribPointer(vert_loc, 2, GL_FLOAT, false, sizeof(Vertex), nullptr);
+    glEnableVertexAttribArray(vert_color_loc);
+    glVertexAttribPointer(vert_color_loc, 4, GL_FLOAT, false, sizeof(Vertex), (const void*)(2 * 4));
 
     glUseProgram(m_program);
     //scaleShaders(m_scale_uniform, 0.5f, 0.5f);
@@ -168,7 +157,7 @@ void GraphicsContext::init(int width, int height) {
 }
 
 void GraphicsContext::resize(int width, int height) {
-    //glViewport(0, 0, window_size.width, window_size.height);
+    glViewport(0, 0, width, height);
     //scaleShaders(m_scale_uniform, scale_data);
 }
 
@@ -184,9 +173,12 @@ void GraphicsContext::free() {
     }
 }
 
-void GraphicsContext::present() {
-    //glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, source.m_width, source.m_height, GL_BGRA, GL_UNSIGNED_SHORT_1_5_5_5_REV, source.m_data.data());
+void GraphicsContext::draw(GLenum mode, Vertex* data, size_t count) {
     glUseProgram(m_program);
     glBindVertexArray(m_vao);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+    glBufferData(GL_ARRAY_BUFFER, count * sizeof(Vertex), data, GL_DYNAMIC_DRAW);
+
+    glDrawArrays(mode, 0, count);
 }
