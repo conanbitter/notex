@@ -15,20 +15,26 @@ public:
 
     void load() override {
         pos = notex::Vec2D(35, 35);
+        transform.pos = notex::Vec2D(35, 35);
+        transform.origin = notex::Vec2D(25, 25);
     }
 
     void update() override {
         if (isKeyDown(notex::Key::Right)) {
             pos.x += 1.0f;
+            transform.move(1.0f, 0.0f);
         }
         if (isKeyDown(notex::Key::Left)) {
             pos.x -= 1.0f;
+            transform.move(-1.0f, 0.0f);
         }
         if (isKeyDown(notex::Key::Down)) {
             pos.y += 1.0f;
+            transform.move(0.0f, 1.0f);
         }
         if (isKeyDown(notex::Key::Up)) {
             pos.y -= 1.0f;
+            transform.move(0.0f, -1.0f);
         }
 
         col_mul += col_mul_d;
@@ -41,7 +47,12 @@ public:
             ds = -ds;
         }
 
+        transform.enlarge(de);
+        if (transform.scale->x <= 1.0) de = 1.01;
+        if (transform.scale->x >= 2.0) de = 0.99;
+
         a += 0.01;
+        transform.rotate(0.01);
     }
 
     void draw() override {
@@ -62,7 +73,8 @@ public:
 
         setMode(notex::DrawingMode::Tris);
         for (notex::Vertex vert : verts) {
-            addVertexRaw(notex::Vertex((vert.pos - origin).rotate(a) * s + pos, vert.color * col_mul));
+            //addVertexRaw(notex::Vertex((vert.pos - origin).rotate(a) * s + pos, vert.color * col_mul));
+            addVertexRaw(notex::Vertex(transform.apply(vert.pos), vert.color * col_mul));
         }
         addIndices(inds);
         //addVertices(verts, inds);
@@ -76,6 +88,8 @@ private:
     float a = 0.0;
     float s = 1.0;
     float ds = 0.01;
+    float de = 1.01;
+    notex::Transform transform;
 };
 
 
