@@ -29,6 +29,8 @@ namespace notex {
 
         void setMode(DrawingMode mode);
         void addVertex(const Vertex& vertex);
+        void addVertices(const std::vector<Vertex>& vertices);
+        void addVertices(const std::vector<Vertex>& vertices, std::vector<uint32_t>& indices);
 
         bool isKeyDown(Key key) const { return m_keys_down.contains(key); }
         bool isKeyPressed(Key key) const { return m_keys_pressed.contains(key); }
@@ -51,12 +53,15 @@ namespace notex {
 
         DrawingMode m_mode;
         std::vector<Vertex> m_vertices;
+        std::vector<uint32_t> m_indices;
+        uint32_t m_index_offset;
 
         std::unordered_set<Key> m_keys_down;
         std::unordered_set<Key> m_keys_pressed;
         std::unordered_set<Key> m_keys_released;
 
         void flush();
+        void clearBuffers();
         void resize(int new_width, int new_height);
         void keyAction(Key key, bool down);
         void keyClear();

@@ -37,13 +37,21 @@ public:
     }
 
     void draw() override {
+
+        std::vector<notex::Vertex> verts{
+            notex::Vertex(10, 10, 1, 1, 1),
+            notex::Vertex(630, 10, 1, 0, 0),
+            notex::Vertex(630, 350, 0, 0, 1),
+            notex::Vertex(10, 350, 0, 1, 0),
+        };
+
+        std::vector<uint32_t> inds{
+            0,1,3,
+            3,1,2
+        };
+
         setMode(notex::DrawingMode::Tris);
-        //addVertex(notex::Vertex(100, 100, 1, 1, 1));
-        //addVertex(notex::Vertex(200, 100, 1, 0, 1));
-        //addVertex(notex::Vertex(100, 200, 1, 1, 0));
-        addVertex(notex::Vertex(0, 0, 1, 1, 1));
-        addVertex(notex::Vertex(640, 0, 1, 0, 1));
-        addVertex(notex::Vertex(0, 360, 1, 1, 0));
+        addVertices(verts, inds);
     }
 private:
     int x = 300;

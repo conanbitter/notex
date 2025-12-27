@@ -100,7 +100,7 @@ void App::run() {
     m_running = true;
 
     while (!glfwWindowShouldClose(m_window) && m_running) {
-        m_vertices.clear();
+        clearBuffers();
 
         update();
         keyClear();
@@ -150,16 +150,37 @@ void App::keyClear() {
     m_keys_released.clear();
 }
 
-void notex::App::flush()
+void App::flush()
 {
-    m_context.draw((GLenum)m_mode, m_vertices.data(), m_vertices.size());
+    m_context.draw((GLenum)m_mode, m_vertices, m_indices);
 }
 
-void notex::App::setMode(DrawingMode mode) {
+void App::clearBuffers() {
+    m_vertices.clear();
+    m_indices.clear();
+    m_index_offset = 0;
+}
+
+void App::setMode(DrawingMode mode) {
     if (mode != m_mode) flush();
     m_mode = mode;
 }
 
-void notex::App::addVertex(const Vertex& vertex) {
+void App::addVertex(const Vertex& vertex) {
     m_vertices.push_back(vertex);
+    m_indices.push_back(m_index_offset);
+    m_index_offset++;
+}
+
+void App::addVertices(const std::vector<Vertex>& vertices) {
+    for (auto vertex : vertices) {
+        addVertex(vertex);
+    }
+}
+void App::addVertices(const std::vector<Vertex>& vertices, std::vector<uint32_t>& indices) {
+    m_vertices.insert(m_vertices.end(), vertices.begin(), vertices.end());
+    for (uint32_t index : indices) {
+        m_indices.push_back(index + m_index_offset);
+    }
+    m_index_offset += m_indices.size();
 }

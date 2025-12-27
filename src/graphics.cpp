@@ -150,6 +150,9 @@ void GraphicsContext::init() {
     glEnableVertexAttribArray(vert_color_loc);
     glVertexAttribPointer(vert_color_loc, 4, GL_FLOAT, false, sizeof(Vertex), (const void*)(2 * 4));
 
+    glGenBuffers(1, &m_ebo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
+
     glUseProgram(m_program);
     //scaleShaders(m_scale_uniform, 0.5f, 0.5f);
 
@@ -173,12 +176,14 @@ void GraphicsContext::free() {
     }
 }
 
-void GraphicsContext::draw(GLenum mode, Vertex* data, size_t count) {
+void GraphicsContext::draw(GLenum mode, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices) {
     glUseProgram(m_program);
     glBindVertexArray(m_vao);
 
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-    glBufferData(GL_ARRAY_BUFFER, count * sizeof(Vertex), data, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data(), GL_DYNAMIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32_t) * indices.size(), indices.data(), GL_DYNAMIC_DRAW);
 
-    glDrawArrays(mode, 0, count);
+    //glDrawArrays(mode, 0, count);
+    glDrawElements(mode, indices.size(), GL_UNSIGNED_INT, nullptr);
 }
