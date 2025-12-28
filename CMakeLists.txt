@@ -10,6 +10,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(INCLUDE_FILES
     app.hpp
     color.hpp
+    figure.hpp
     geometry.hpp
     graphics.hpp
     keys.hpp
@@ -20,6 +21,7 @@ set(INCLUDE_FILES
 set(SRC_FILES
     app.cpp
     color.cpp
+    figure.cpp
     geometry.cpp
     graphics.cpp    
     main.cpp
