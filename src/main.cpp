@@ -78,6 +78,20 @@ public:
         }
         addIndices(inds);
         //addVertices(verts, inds);
+
+        setMode(notex::DrawingMode::Lines);
+        setLineWidth(3.5f);
+        addVertex(notex::Vertex(notex::Vec2D(200, 200), notex::Color(1.0, 1.0, 1.0)));
+        addVertex(notex::Vertex(notex::Vec2D(400, 200), notex::Color(1.0, 0.5, 1.0)));
+        addVertex(notex::Vertex(notex::Vec2D(400, 200), notex::Color(1.0, 0.5, 1.0)));
+        addVertex(notex::Vertex(notex::Vec2D(300, 400), notex::Color(1.0, 1.0, 1.0)));
+
+        setMode(notex::DrawingMode::Points);
+        setPointSize(4.5f);
+        addVertex(notex::Vertex(notex::Vec2D(500, 100), notex::Color(1.0, 1.0, 1.0)));
+        addVertex(notex::Vertex(notex::Vec2D(500, 200), notex::Color(1.0, 0.5, 1.0)));
+        addVertex(notex::Vertex(notex::Vec2D(550, 200), notex::Color(1.0, 0.5, 1.0)));
+        addVertex(notex::Vertex(notex::Vec2D(600, 200), notex::Color(1.0, 1.0, 1.0)));
     }
 private:
     notex::Vec2D pos;

@@ -78,6 +78,13 @@ void App::init(const std::string& title, int width, int height, int initial_scal
 
     resize(width * initial_scale, height * initial_scale);
 
+    m_line_width = 1.0;
+    glLineWidth(m_line_width);
+    glEnable(GL_LINE_SMOOTH);
+    m_point_size = 1.0;
+    glPointSize(m_point_size);
+    glDisable(GL_PROGRAM_POINT_SIZE);
+
     load();
     m_init_complete = true;
 }
@@ -150,6 +157,7 @@ void App::keyClear() {
 
 void App::flush()
 {
+    if (m_indices.empty()) return;
     m_context.draw((GLenum)m_mode, m_vertices, m_indices);
     clearBuffers();
 }
@@ -163,6 +171,19 @@ void App::clearBuffers() {
 void App::setMode(DrawingMode mode) {
     if (mode != m_mode) flush();
     m_mode = mode;
+}
+
+void notex::App::setLineWidth(float width) {
+    if (m_mode == DrawingMode::Lines) flush();
+    m_line_width = width;
+    glLineWidth(m_line_width);
+}
+
+void notex::App::setPointSize(float size) {
+    if (m_mode == DrawingMode::Points) flush();
+    flush();
+    m_point_size = size;
+    glPointSize(size);
 }
 
 void App::addVertex(const Vertex& vertex) {

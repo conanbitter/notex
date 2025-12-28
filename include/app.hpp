@@ -28,6 +28,11 @@ namespace notex {
         bool getCursorVisible() const { return m_cursor_visible; };
 
         void setMode(DrawingMode mode);
+        DrawingMode getMode() const { return m_mode; }
+        void setLineWidth(float width);
+        float getLineWidth() const { return m_line_width; }
+        void setPointSize(float size);
+        float getPointSize() const { return m_point_size; }
         void addVertex(const Vertex& vertex);
         void addVertexRaw(const Vertex& vertex);
         void addVertices(const std::vector<Vertex>& vertices);
@@ -57,6 +62,8 @@ namespace notex {
         std::vector<Vertex> m_vertices;
         std::vector<uint32_t> m_indices;
         uint32_t m_index_offset;
+        float m_line_width;
+        float m_point_size;
 
         std::unordered_set<Key> m_keys_down;
         std::unordered_set<Key> m_keys_pressed;
