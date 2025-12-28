@@ -11,7 +11,7 @@ Color Color::operator*(const Color& rhs) const
         std::clamp(r * rhs.r, 0.0f, 1.0f),
         std::clamp(g * rhs.g, 0.0f, 1.0f),
         std::clamp(b * rhs.b, 0.0f, 1.0f),
-        a
+        std::clamp(a * rhs.a, 0.0f, 1.0f)
     );
 }
 

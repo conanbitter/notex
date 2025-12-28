@@ -71,14 +71,6 @@ public:
 
         notex::Vec2D origin(25, 25);
 
-        setMode(notex::DrawingMode::Tris);
-        for (notex::Vertex vert : verts) {
-            //addVertexRaw(notex::Vertex((vert.pos - origin).rotate(a) * s + pos, vert.color * col_mul));
-            addVertexRaw(notex::Vertex(transform.apply(vert.pos), vert.color * col_mul));
-        }
-        addIndices(inds);
-        //addVertices(verts, inds);
-
         setMode(notex::DrawingMode::Lines);
         setLineWidth(3.5f);
         addVertex(notex::Vertex(notex::Vec2D(200, 200), notex::Color(1.0, 1.0, 1.0)));
@@ -92,6 +84,14 @@ public:
         addVertex(notex::Vertex(notex::Vec2D(500, 200), notex::Color(1.0, 0.5, 1.0)));
         addVertex(notex::Vertex(notex::Vec2D(550, 200), notex::Color(1.0, 0.5, 1.0)));
         addVertex(notex::Vertex(notex::Vec2D(600, 200), notex::Color(1.0, 1.0, 1.0)));
+
+        setMode(notex::DrawingMode::Tris);
+        for (notex::Vertex vert : verts) {
+            //addVertexRaw(notex::Vertex((vert.pos - origin).rotate(a) * s + pos, vert.color * col_mul));
+            addVertexRaw(notex::Vertex(transform.apply(vert.pos), vert.color * notex::Color(1.0f, 1.0f, 1.0f, col_mul)));
+        }
+        addIndices(inds);
+        //addVertices(verts, inds);
     }
 private:
     notex::Vec2D pos;

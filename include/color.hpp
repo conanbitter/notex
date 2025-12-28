@@ -22,7 +22,6 @@ namespace notex {
         static const Color CYAN;
         static const Color MAGENTA;
         static const Color YELLOW;
-        static const Color TRANSPARENT;
 
         Color operator*(const Color& rhs)const;
         Color operator*(float rhs)const;

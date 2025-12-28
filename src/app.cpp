@@ -85,6 +85,9 @@ void App::init(const std::string& title, int width, int height, int initial_scal
     glPointSize(m_point_size);
     glDisable(GL_PROGRAM_POINT_SIZE);
 
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     load();
     m_init_complete = true;
 }
