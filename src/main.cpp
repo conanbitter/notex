@@ -75,6 +75,7 @@ public:
         setLineWidth(3.5f);
         addVertex(notex::Vertex(notex::Vec2D(200, 200), notex::Color(1.0, 1.0, 1.0)));
         addVertex(notex::Vertex(notex::Vec2D(400, 200), notex::Color(1.0, 0.5, 1.0)));
+        setLineWidth(1.5f);
         addVertex(notex::Vertex(notex::Vec2D(400, 200), notex::Color(1.0, 0.5, 1.0)));
         addVertex(notex::Vertex(notex::Vec2D(300, 400), notex::Color(1.0, 1.0, 1.0)));
 
@@ -82,7 +83,9 @@ public:
         setPointSize(4.5f);
         addVertex(notex::Vertex(notex::Vec2D(500, 100), notex::Color(1.0, 1.0, 1.0)));
         addVertex(notex::Vertex(notex::Vec2D(500, 200), notex::Color(1.0, 0.5, 1.0)));
+        setPointSize(14.5f);
         addVertex(notex::Vertex(notex::Vec2D(550, 200), notex::Color(1.0, 0.5, 1.0)));
+        setPointSize(4.5f);
         addVertex(notex::Vertex(notex::Vec2D(600, 200), notex::Color(1.0, 1.0, 1.0)));
 
         setMode(notex::DrawingMode::Tris);
