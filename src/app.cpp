@@ -75,6 +75,7 @@ void App::init(const std::string& title, int width, int height, int initial_scal
     m_context.init();
     m_mode = DrawingMode::Tris;
     m_view_size = Size(width, height);
+    m_global_scale = initial_scale;
 
     resize(width * initial_scale, height * initial_scale);
 
@@ -93,16 +94,18 @@ void App::init(const std::string& title, int width, int height, int initial_scal
 }
 
 void App::resize(int new_width, int new_height) {
-    float scale = std::min(
+    m_global_scale = std::min(
         (float)new_width / m_view_size.width,
         (float)new_height / m_view_size.height);
     Vec2D scale_data(
-        2.0f / new_width * scale,
-        2.0f / new_height * scale);
+        2.0f / new_width * m_global_scale,
+        2.0f / new_height * m_global_scale);
     Vec2D offset_data(
-        1.0f - m_view_size.width * scale / new_width,
-        1.0f - m_view_size.height * scale / new_height);
+        1.0f - m_view_size.width * m_global_scale / new_width,
+        1.0f - m_view_size.height * m_global_scale / new_height);
     m_context.resize(new_width, new_height, scale_data, offset_data);
+    glLineWidth(m_line_width * m_global_scale);
+    glPointSize(m_point_size * m_global_scale);
 }
 
 void App::run() {
@@ -179,14 +182,14 @@ void App::setMode(DrawingMode mode) {
 void notex::App::setLineWidth(float width) {
     if (m_mode == DrawingMode::Lines) flush();
     m_line_width = width;
-    glLineWidth(m_line_width);
+    glLineWidth(m_line_width * m_global_scale);
 }
 
 void notex::App::setPointSize(float size) {
     if (m_mode == DrawingMode::Points) flush();
     flush();
     m_point_size = size;
-    glPointSize(size);
+    glPointSize(m_point_size * m_global_scale);
 }
 
 void App::addVertex(const Vertex& vertex) {

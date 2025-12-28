@@ -64,6 +64,7 @@ namespace notex {
         uint32_t m_index_offset;
         float m_line_width;
         float m_point_size;
+        float m_global_scale;
 
         std::unordered_set<Key> m_keys_down;
         std::unordered_set<Key> m_keys_pressed;
