@@ -77,12 +77,20 @@ void App::init(const std::string& title, int width, int height, int initial_scal
     m_view_size = Size(width, height);
     m_global_scale = initial_scale;
 
+    m_current_command.mode = DrawingMode::Tris;
+    m_current_command.index_count = 0;
+    m_current_command.index_offset = 0;
+    m_current_command.size = -1.0f;
+    m_current_command.vertex_offset = 0;
+
     resize(width * initial_scale, height * initial_scale);
 
     m_line_width = 1.0;
+    m_next_line_width = -1.0;
     glLineWidth(m_line_width);
     glEnable(GL_LINE_SMOOTH);
     m_point_size = 1.0;
+    m_next_point_size = -1.0;
     glPointSize(m_point_size);
     glDisable(GL_PROGRAM_POINT_SIZE);
 
@@ -163,9 +171,14 @@ void App::keyClear() {
 
 void App::flush()
 {
-    if (m_indices.empty()) return;
+    /*if (m_indices.empty()) return;
     m_context.draw((GLenum)m_mode, m_vertices, m_indices);
-    clearBuffers();
+    clearBuffers();*/
+    m_commands.push_back(m_current_command);
+    m_current_command.index_count = 0;
+    m_current_command.index_offset = m_indices.size();
+    m_current_command.size = -1.0f;
+    m_current_command.vertex_offset = m_vertices.size();
 }
 
 void App::clearBuffers() {
@@ -175,14 +188,37 @@ void App::clearBuffers() {
 }
 
 void App::setMode(DrawingMode mode) {
-    if (mode != m_mode) flush();
-    m_mode = mode;
+    /*if (mode != m_mode) flush();
+    m_mode = mode;*/
+    if (m_current_command.mode == mode) return;
+    if (m_current_command.index_count == 0) {
+        if (m_current_command.mode == DrawingMode::Lines) m_next_line_width = m_current_command.size;
+        if (m_current_command.mode == DrawingMode::Points) m_next_point_size = m_current_command.size;
+    } else {
+        flush();
+    }
+    m_current_command.mode = mode;
+    if (mode == DrawingMode::Lines && m_next_line_width > 0.0f) {
+        m_current_command.size = m_next_line_width;
+        m_next_line_width = -1.0f;
+    }
+    if (mode == DrawingMode::Points && m_next_point_size > 0.0f) {
+        m_current_command.size = m_next_point_size;
+        m_next_point_size = -1.0f;
+    }
 }
 
 void notex::App::setLineWidth(float width) {
-    if (m_mode == DrawingMode::Lines) flush();
+    /*if (m_mode == DrawingMode::Lines) flush();
     m_line_width = width;
-    glLineWidth(m_line_width * m_global_scale);
+    glLineWidth(m_line_width * m_global_scale);*/
+    if (m_current_command.mode == DrawingMode::Lines) {
+        flush();
+        m_current_command.mode = DrawingMode::Lines;
+        m_current_command.size = width;
+    } else {
+        m_next_line_width = width;
+    }
 }
 
 void notex::App::setPointSize(float size) {

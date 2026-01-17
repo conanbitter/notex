@@ -8,6 +8,10 @@
 #include "graphics.hpp"
 #include "keys.hpp"
 
+using std::vector;
+using std::unordered_set;
+using std::string;
+
 namespace notex {
     enum class DrawingMode :GLenum {
         Tris = GL_TRIANGLES,
@@ -15,11 +19,19 @@ namespace notex {
         Points = GL_POINTS
     };
 
+    struct DrawingCommand {
+        DrawingMode mode;
+        float size;
+        int vertex_offset;
+        size_t index_offset;
+        size_t index_count;
+    };
+
     class App {
     public:
         App() : m_init_complete{ false }, m_running{ false }, m_window{ nullptr } {};
         ~App();
-        void init(const std::string& title, int width, int height, int initial_scale = 1);
+        void init(const string& title, int width, int height, int initial_scale = 1);
         void run();
 
         void requestExit();
@@ -35,9 +47,9 @@ namespace notex {
         float getPointSize() const { return m_point_size; }
         void addVertex(const Vertex& vertex);
         void addVertexRaw(const Vertex& vertex);
-        void addVertices(const std::vector<Vertex>& vertices);
-        void addVertices(const std::vector<Vertex>& vertices, std::vector<uint32_t>& indices);
-        void addIndices(std::vector<uint32_t>& indices);
+        void addVertices(const vector<Vertex>& vertices);
+        void addVertices(const vector<Vertex>& vertices, vector<uint32_t>& indices);
+        void addIndices(vector<uint32_t>& indices);
 
         bool isKeyDown(Key key) const { return m_keys_down.contains(key); }
         bool isKeyPressed(Key key) const { return m_keys_pressed.contains(key); }
@@ -59,16 +71,21 @@ namespace notex {
         Size m_view_size;
 
         DrawingMode m_mode;
-        std::vector<Vertex> m_vertices;
-        std::vector<uint32_t> m_indices;
+        vector<Vertex> m_vertices;
+        vector<uint32_t> m_indices;
+        vector<DrawingCommand> m_commands;
+        DrawingCommand m_current_command;
+
         uint32_t m_index_offset;
         float m_line_width;
+        float m_next_line_width;
         float m_point_size;
+        float m_next_point_size;
         float m_global_scale;
 
-        std::unordered_set<Key> m_keys_down;
-        std::unordered_set<Key> m_keys_pressed;
-        std::unordered_set<Key> m_keys_released;
+        unordered_set<Key> m_keys_down;
+        unordered_set<Key> m_keys_pressed;
+        unordered_set<Key> m_keys_released;
 
         void flush();
         void clearBuffers();
